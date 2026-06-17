@@ -1,0 +1,11 @@
+# Clash 本地缓存
+providers/
+ruleset/
+*.yaml.bak
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

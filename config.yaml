@@ -1,0 +1,270 @@
+# ============================================================
+# My Clash Config
+# 引用自维护规则: github.com/你的用户名/my-clash-rules
+# ============================================================
+
+# ============ 基础 ============
+mixed-port: 7890
+allow-lan: false
+bind-address: "*"
+mode: rule
+log-level: info
+ipv6: false
+find-process-mode: strict
+external-controller: 127.0.0.1:9090
+
+# ============ DNS ============
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    # 本地
+    - "*.lan"
+    - "*.local"
+    - "*.localhost"
+    - "*.home"
+    - "*.internal"
+    - "*.mshome.net"
+    # 系统
+    - "dns.msftncsi.com"
+    - "www.msftncsi.com"
+    - "+.msftconnecttest.com"
+    # 时间同步
+    - "time.*.com"
+    - "time.*.gov"
+    - "time.*.edu.cn"
+    - "time.*.apple.com"
+    - "time-ios.apple.com"
+    - "time-macos.apple.com"
+    - "+.pool.ntp.org"
+    - "ntp.ubuntu.com"
+    # 游戏
+    - "+.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "xbox.*.microsoft.com"
+    - "+.xboxlive.com"
+    - "+.wargaming.net"
+    # QQ
+    - "localhost.ptlogin2.qq.com"
+    # 视频
+    - "*.mcdn.bilivideo.cn"
+
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.google/dns-query
+    - tls://8.8.8.8:853
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - "+.google.com"
+      - "+.facebook.com"
+      - "+.youtube.com"
+      - "+.twitter.com"
+      - "+.github.com"
+
+# ============ 代理提供者 ============
+proxy-providers:
+  my-provider:
+    type: http
+    url: "https://你的订阅链接"
+    interval: 3600
+    path: ./providers/my-provider.yaml
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+
+# ============ 代理组 ============
+proxy-groups:
+  # 主入口
+  - name: "🚀 节点选择"
+    type: select
+    proxies:
+      - "♻️ 自动选择"
+      - DIRECT
+    use:
+      - my-provider
+
+  # 自动选延迟最低的
+  - name: "♻️ 自动选择"
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    use:
+      - my-provider
+
+  # 流媒体
+  - name: "🎬 流媒体"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+    use:
+      - my-provider
+
+  # 电报
+  - name: "📲 Telegram"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+    use:
+      - my-provider
+
+  # AI 服务
+  - name: "🤖 AI 服务"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+    use:
+      - my-provider
+
+  # 苹果
+  - name: "🍎 苹果服务"
+    type: select
+    proxies:
+      - DIRECT
+      - "🚀 节点选择"
+    use:
+      - my-provider
+
+  # 微软
+  - name: "Ⓜ️ 微软服务"
+    type: select
+    proxies:
+      - DIRECT
+      - "🚀 节点选择"
+    use:
+      - my-provider
+
+  # 广告拦截
+  - name: "🛑 广告拦截"
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  # 兜底
+  - name: "🐟 漏网之鱼"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - DIRECT
+
+# ============ 规则提供者（指向本仓库） ============
+# ⚠️ 把下面的 你的用户名 替换成你的 GitHub 用户名
+rule-providers:
+  my-proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/你的用户名/my-clash-rules@main/rules/proxy.txt"
+    path: ./ruleset/my-proxy.yaml
+    interval: 86400
+
+  my-direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/你的用户名/my-clash-rules@main/rules/direct.txt"
+    path: ./ruleset/my-direct.yaml
+    interval: 86400
+
+  my-private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/你的用户名/my-clash-rules@main/rules/private.txt"
+    path: ./ruleset/my-private.yaml
+    interval: 86400
+
+  my-private-cidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/你的用户名/my-clash-rules@main/rules/private-cidr.txt"
+    path: ./ruleset/my-private-cidr.yaml
+    interval: 86400
+
+  my-reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/你的用户名/my-clash-rules@main/rules/reject.txt"
+    path: ./ruleset/my-reject.yaml
+    interval: 86400
+
+# ============ 规则 ============
+rules:
+  # 局域网 / 内网
+  - RULE-SET,my-private,DIRECT
+  - RULE-SET,my-private-cidr,DIRECT
+
+  # 广告拦截
+  - RULE-SET,my-reject,🛑 广告拦截
+
+  # AI 服务
+  - DOMAIN-SUFFIX,openai.com,🤖 AI 服务
+  - DOMAIN-SUFFIX,chatgpt.com,🤖 AI 服务
+  - DOMAIN-SUFFIX,ai.com,🤖 AI 服务
+  - DOMAIN-SUFFIX,anthropic.com,🤖 AI 服务
+  - DOMAIN-SUFFIX,claude.ai,🤖 AI 服务
+  - DOMAIN-SUFFIX,perplexity.ai,🤖 AI 服务
+
+  # Telegram
+  - DOMAIN-SUFFIX,t.me,📲 Telegram
+  - DOMAIN-SUFFIX,telegram.org,📲 Telegram
+  - DOMAIN-SUFFIX,telegram.me,📲 Telegram
+  - DOMAIN-SUFFIX,telegra.ph,📲 Telegram
+  - DOMAIN-SUFFIX,telegram-cdn.org,📲 Telegram
+
+  # 流媒体
+  - DOMAIN-SUFFIX,netflix.com,🎬 流媒体
+  - DOMAIN-SUFFIX,netflix.net,🎬 流媒体
+  - DOMAIN-SUFFIX,nflxvideo.net,🎬 流媒体
+  - DOMAIN-SUFFIX,nflximg.net,🎬 流媒体
+  - DOMAIN-SUFFIX,youtube.com,🎬 流媒体
+  - DOMAIN-SUFFIX,youtu.be,🎬 流媒体
+  - DOMAIN-SUFFIX,googlevideo.com,🎬 流媒体
+  - DOMAIN-SUFFIX,ytimg.com,🎬 流媒体
+  - DOMAIN-SUFFIX,disneyplus.com,🎬 流媒体
+  - DOMAIN-SUFFIX,spotify.com,🎬 流媒体
+  - DOMAIN-SUFFIX,spotifycdn.com,🎬 流媒体
+  - DOMAIN-SUFFIX,twitch.tv,🎬 流媒体
+
+  # 苹果
+  - DOMAIN-SUFFIX,apple.com,🍎 苹果服务
+  - DOMAIN-SUFFIX,apple.co,🍎 苹果服务
+  - DOMAIN-SUFFIX,icloud.com,🍎 苹果服务
+  - DOMAIN-SUFFIX,mzstatic.com,🍎 苹果服务
+  - DOMAIN-SUFFIX,cdn-apple.com,🍎 苹果服务
+
+  # 微软
+  - DOMAIN-SUFFIX,microsoft.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,microsoftonline.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,office.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,office365.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,live.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,outlook.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,skype.com,Ⓜ️ 微软服务
+
+  # 被墙域名
+  - RULE-SET,my-proxy,🚀 节点选择
+
+  # 国内域名
+  - RULE-SET,my-direct,DIRECT
+
+  # 中国 IP 直连
+  - GEOIP,CN,DIRECT
+
+  # 兜底
+  - MATCH,🐟 漏网之鱼
