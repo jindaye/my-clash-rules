@@ -224,143 +224,88 @@ proxy-groups:
       - "✅ 自动选择"
       - "🎯 全球直连"
 
-# ============ 规则提供者 ============
+# ============ 规则提供者（全部来自本仓库）============
+# ⚠️ 把 jindaye 替换成你的 GitHub 用户名
 rule-providers:
-  # Loyalsoldier 上游规则
-  private:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
-    path: ./ruleset/private.yaml
-    interval: 86400
-
-  applications:
-    type: http
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
-    path: ./ruleset/applications.yaml
-    interval: 86400
-
+  # 域名规则
   direct:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/direct.txt"
     path: ./ruleset/direct.yaml
     interval: 86400
 
   proxy:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/proxy.txt"
     path: ./ruleset/proxy.yaml
     interval: 86400
 
-  gfw:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
-    path: ./ruleset/gfw.yaml
-    interval: 86400
-
-  tld-not-cn:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
-    path: ./ruleset/tld-not-cn.yaml
-    interval: 86400
-
-  google:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
-    path: ./ruleset/google.yaml
-    interval: 86400
-
-  apple:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
-    path: ./ruleset/apple.yaml
-    interval: 86400
-
-  icloud:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
-    path: ./ruleset/icloud.yaml
-    interval: 86400
-
-  telegramcidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
-    path: ./ruleset/telegramcidr.yaml
-    interval: 86400
-
-  cncidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
-    path: ./ruleset/cncidr.yaml
-    interval: 86400
-
-  lancidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
-    path: ./ruleset/lancidr.yaml
-    interval: 86400
-
-  # 自定义规则（广告拦截）
-  my-reject:
+  reject:
     type: http
     behavior: domain
     url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/reject.txt"
-    path: ./ruleset/my-reject.yaml
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  # IP 段规则
+  lan-cidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/lan-cidr.txt"
+    path: ./ruleset/lan-cidr.yaml
+    interval: 86400
+
+  cn-cidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/cn-cidr.txt"
+    path: ./ruleset/cn-cidr.yaml
+    interval: 86400
+
+  telegram-cidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/telegram-cidr.txt"
+    path: ./ruleset/telegram-cidr.yaml
+    interval: 86400
+
+  # 应用规则
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/applications.txt"
+    path: ./ruleset/applications.yaml
     interval: 86400
 
 # ============ 规则 ============
 rules:
-  # ---- 内网 / 本地（最高优先级）----
-  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
-  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
-  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
-  - RULE-SET,private,🏠 内网服务
-  - RULE-SET,lancidr,🏠 内网服务
+  # ---- 内网（最高优先级）----
+  - RULE-SET,lan-cidr,🏠 内网服务,no-resolve
 
   # ---- 广告拦截 ----
-  - RULE-SET,my-reject,REJECT
+  - RULE-SET,reject,REJECT
 
   # ---- Telegram ----
-  - RULE-SET,telegramcidr,📲 电报消息
-
-  # ---- 谷歌 ----
-  - DOMAIN-SUFFIX,gstatic.com,🧿 谷歌服务
-  - RULE-SET,google,🧿 谷歌服务
-
-  # ---- 苹果 ----
-  - RULE-SET,icloud,🍎 苹果同步
-  - RULE-SET,apple,🍎 苹果服务
+  - RULE-SET,telegram-cidr,📲 电报消息,no-resolve
 
   # ---- 常用软件 ----
   - RULE-SET,applications,📱 常用软件
-
-  # ---- 被墙 ----
-  - DOMAIN-SUFFIX,unmineable.com,🧱 被墙网站
-  - RULE-SET,gfw,🧱 被墙网站
-  - RULE-SET,proxy,🧱 被墙网站
-  - RULE-SET,tld-not-cn,🧱 被墙网站
 
   # ---- 自定义直连 ----
   - DOMAIN-SUFFIX,jsdelivr.net,🇨🇳 国内直连
   - DOMAIN-SUFFIX,douyin.com,🇨🇳 国内直连
 
-  # ---- 国内 ----
+  # ---- 被墙域名 ----
+  - DOMAIN-SUFFIX,unmineable.com,🧱 被墙网站
+  - RULE-SET,proxy,🧱 被墙网站
+
+  # ---- 国内域名 ----
   - RULE-SET,direct,🇨🇳 国内直连
-  - RULE-SET,cncidr,🇨🇳 国内直连
+
+  # ---- 中国 IP ----
+  - RULE-SET,cn-cidr,🇨🇳 国内直连,no-resolve
   - GEOIP,CN,🇨🇳 国内直连
 
   # ---- 兜底 ----
