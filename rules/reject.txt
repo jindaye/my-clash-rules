@@ -1,99 +1,85 @@
 # 广告 / 追踪 / 恶意域名 — 拦截
-# 每行一个域名，# 开头为注释
+# 自定义
 
-# ============ 国内广告 ============
-cpro.baidu.com
-pos.baidu.com
-hm.baidu.com
-hmma.baidu.com
-cb.baidu.com
-baidustatic.com
-dup.baidustatic.com
-bdimg.com
-bdstatic.com
-ssp.baidu.com
-entry.baidu.com
-nsclick.baidu.com
-wangmeng.baidu.com
-as.baidu.com
-ads.baidu.com
-mobads.baidu.com
-mobads-logs.baidu.com
-
-# 腾讯广告
-pgdt.gtimg.cn
-mi.gdt.qq.com
-ios.bugly.qq.com
-android.bugly.qq.com
-e.qq.com
-gdt.qq.com
-adsmind.gdtimg.com
-pgdt.gtimg.cn
-t.gdt.qq.com
-v.gdt.qq.com
-r.gdt.qq.com
-splashqqlive.gtimg.cn
-tads.qq.com
-taf.qq.com
-tdw.qq.com
-
-# 阿里广告
-mmstat.com
-tanx.com
-atanx.alicdn.com
-simba.taobao.com
-taobao.com/go/
-
-# 字节/巨量广告
-pangolin-sdk-toutiao.com
-pangolin.snssdk.com
-is.snssdk.com
-ad.toutiao.com
-dsp.toutiao.com
-analytics.oceanengine.com
-mon.snssdk.com
-
-# ============ 国际广告 ============
-# Google 广告
-pagead2.googlesyndication.com
-adservice.google.com
-adservice.google.com.hk
-googleadservices.com
-www.googleadservices.com
-tpc.googlesyndication.com
-video-ad-stats.googlevideo.com
-
-# Facebook 广告
-pixel.facebook.com
-graph.facebook.com
-connect.facebook.net
-an.facebook.com
-
-# 通用广告 / 追踪
-doubleclick.net
-ads.linkedin.com
-snap.licdn.com
-ads-twitter.com
-analytics.twitter.com
-ads.pinterest.com
-analytics.pinterest.com
-bat.bing.com
-ads.yahoo.com
-advertising.com
-adsrvr.org
-adsymptotic.com
-demdex.net
-omtrdc.net
-optimizely.com
-segment.io
-segment.com
-mixpanel.com
-amplitude.com
-branch.io
-appsflyer.com
-adjust.com
-sentry.io
-bugsnag.com
-crashlytics.com
-fabric.io
-instabug.com
+payload:
+  # 百度广告
+  - 'cpro.baidu.com'
+  - 'pos.baidu.com'
+  - 'hm.baidu.com'
+  - 'hmma.baidu.com'
+  - 'cb.baidu.com'
+  - 'dup.baidustatic.com'
+  - 'bdimg.com'
+  - 'bdstatic.com'
+  - 'ssp.baidu.com'
+  - 'entry.baidu.com'
+  - 'nsclick.baidu.com'
+  - 'wangmeng.baidu.com'
+  - 'as.baidu.com'
+  - 'ads.baidu.com'
+  - 'mobads.baidu.com'
+  - 'mobads-logs.baidu.com'
+  # 腾讯广告
+  - 'pgdt.gtimg.cn'
+  - 'mi.gdt.qq.com'
+  - 'ios.bugly.qq.com'
+  - 'android.bugly.qq.com'
+  - 'e.qq.com'
+  - 'gdt.qq.com'
+  - 'adsmind.gdtimg.com'
+  - 'tads.qq.com'
+  - 'taf.qq.com'
+  - 'tdw.qq.com'
+  # 阿里广告
+  - 'mmstat.com'
+  - 'tanx.com'
+  - 'atanx.alicdn.com'
+  - 'simba.taobao.com'
+  # 字节广告
+  - 'pangolin-sdk-toutiao.com'
+  - 'pangolin.snssdk.com'
+  - 'is.snssdk.com'
+  - 'ad.toutiao.com'
+  - 'dsp.toutiao.com'
+  - 'analytics.oceanengine.com'
+  - 'mon.snssdk.com'
+  # Google 广告
+  - 'pagead2.googlesyndication.com'
+  - 'adservice.google.com'
+  - 'adservice.google.com.hk'
+  - 'googleadservices.com'
+  - 'www.googleadservices.com'
+  - 'tpc.googlesyndication.com'
+  # Facebook 广告
+  - 'pixel.facebook.com'
+  - 'graph.facebook.com'
+  - 'connect.facebook.net'
+  - 'an.facebook.com'
+  # 通用广告 / 追踪
+  - 'doubleclick.net'
+  - 'ads.linkedin.com'
+  - 'snap.licdn.com'
+  - 'ads-twitter.com'
+  - 'analytics.twitter.com'
+  - 'ads.pinterest.com'
+  - 'analytics.pinterest.com'
+  - 'bat.bing.com'
+  - 'ads.yahoo.com'
+  - 'advertising.com'
+  - 'adsrvr.org'
+  - 'adsymptotic.com'
+  - 'demdex.net'
+  - 'omtrdc.net'
+  - 'optimizely.com'
+  - 'segment.io'
+  - 'segment.com'
+  - 'mixpanel.com'
+  - 'amplitude.com'
+  - 'branch.io'
+  - 'appsflyer.com'
+  - 'adjust.com'
+  - 'sentry.io'
+  - 'bugsnag.com'
+  - 'crashlytics.com'
+  - 'fabric.io'
+  - 'instabug.com'
