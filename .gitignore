@@ -3,6 +3,9 @@ providers/
 ruleset/
 *.yaml.bak
 
+# 本地配置（含节点信息，不要推到 Git）
+config.local.yaml
+
 # macOS
 .DS_Store
 

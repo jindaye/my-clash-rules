@@ -10,7 +10,6 @@ googleusercontent.com
 googlesyndication.com
 googletagmanager.com
 googletagservices.com
-gstatic.com
 gstatic.cn
 ggpht.com
 gvt1.com
@@ -123,7 +122,7 @@ cloudflareinsights.com
 heroku.com
 herokucdn.com
 fastly.net
-jsdelivr.net
+
 unpkg.com
 
 # ============ 维基百科 ============
@@ -155,6 +154,7 @@ twitchcdn.net
 
 # ============ 其他常用 ============
 mega.nz
+unmineable.com
 mega.co.nz
 archive.org
 signal.org

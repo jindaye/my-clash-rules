@@ -183,3 +183,10 @@ oschina.net
 gitee.com
 segmentfault.com
 v2ex.com
+jsdelivr.net
+
+# ============ 短视频 ============
+douyin.com
+douyinpic.com
+douyinstatic.com
+douyincdn.com
