@@ -1,419 +1,367 @@
-1|# ============================================================
-2|# My Clash Meta Config
-3|# 仓库: github.com/jindaye/my-clash-rules
-4|# ============================================================
-5|
-6|# ============ 基础 ============
-7|mixed-port: 7890
-8|allow-lan: true
-9|bind-address: "*"
-10|mode: rule
-11|log-level: info
-12|ipv6: false
-13|find-process-mode: strict
-14|external-controller: :9090
-15|secret: "123456"
-16|
-17|# ============ DNS ============
-18|dns:
-19|  enable: true
-20|  prefer-h3: true
-21|  ipv6: false
-22|  enhanced-mode: fake-ip
-23|  fake-ip-range: 198.18.0.1/16
-24|  fake-ip-filter:
-25|    # 局域网
-26|    - "*.lan"
-27|    - "*.local"
-28|    - "*.router"
-29|    - "*.localdomain"
-30|    - "*.home.arpa"
-31|    - "*.belkin"
-32|    - "*.tplinklogin.net"
-33|    - "*.tenda"
-34|    - WORKGROUP
-35|    # Windows 网络检测
-36|    - "*.msftncsi.com"
-37|    - "*.msftconnecttest.com"
-38|    # 时间同步
-39|    - "time.windows.com"
-40|    - "time.nist.gov"
-41|    - "time.apple.com"
-42|    - "time.asia.apple.com"
-43|    - "time.*.com"
-44|    - "time.*.gov"
-45|    - "time.*.edu.cn"
-46|    - "*.ntp.org.cn"
-47|    - "*.openwrt.pool.ntp.org"
-48|    - "time1.cloud.tencent.com"
-49|    - "time.ustc.edu.cn"
-50|    - "pool.ntp.org"
-51|    - "ntp.ubuntu.com"
-52|    - "+.pool.ntp.org"
-53|    # STUN
-54|    - "stun.*.*"
-55|    - "stun.*.*.*"
-56|    - "+.stun.*.*"
-57|    - "+.stun.*.*.*"
-58|    - "+.stun.*.*.*.*"
-59|    - "+.stun.*.*.*.*.*"
-60|    # 游戏
-61|    - "*.n.n.srv.nintendo.net"
-62|    - "+.stun.playstation.net"
-63|    - "xbox.*.*.microsoft.com"
-64|    - "*.*.xboxlive.com"
-65|    - "speedtest.cros.wr.pvp.net"
-66|    # QQ
-67|    - "localhost.ptlogin2.qq.com"
-68|
-69|  default-nameserver:
-70|    - 223.5.5.5
-71|    - 119.29.29.29
-72|    - 114.114.114.114
-73|
-74|  nameserver:
-75|    - 223.5.5.5
-76|    - 119.29.29.29
-77|    - 114.114.114.114
-78|    - https://doh.pub/dns-query
-79|    - https://dns.alidns.com/dns-query
-80|
-81|  fallback:
-82|    - https://dns.google/dns-query
-83|    - https://cloudflare-dns.com/dns-query
-84|    - tls://8.8.8.8:853
-85|
-86|  fallback-filter:
-87|    geoip: true
-88|    geoip-code: CN
-89|    ipcidr:
-90|      - 0.0.0.0/8
-91|      - 10.0.0.0/8
-92|      - 127.0.0.0/8
-93|      - 169.254.0.0/16
-94|      - 172.16.0.0/12
-95|      - 192.168.0.0/16
-96|      - 224.0.0.0/4
-97|      - 240.0.0.0/4
-98|    domain:
-99|      - "+.google.com"
-100|      - "+.youtube.com"
-101|      - "+.facebook.com"
-102|      - "+.twitter.com"
-103|      - "+.telegram.org"
-104|      - "+.reddit.com"
-105|      - "+.spotify.com"
-106|      - "+.openai.com"
-107|      - "+.github.com"
-108|      - "+.cloudflare.com"
-109|
-110|# ============ 节点 ============
-111|proxies:
-112|  # ⚠️ 把你的节点信息填在这里，不要推送到 Git
-113|  # 示例:
-114|  # - name: my-node
-115|  #   type: trojan
-116|  #   server: example.com
-117|  #   port: 443
-118|  #   password: your-password
-119|  #   skip-cert-verify: true
-120|
-121|# ============ 代理组 ============
-122|proxy-groups:
-123|  # 主入口
-124|  - name: "🚀 节点选择"
-125|    type: select
-126|    proxies:
-127|      - "✅ 自动选择"
-128|      - "⚖️ 负载均衡"
-129|      - "⭕ 故障切换"
-130|      - my-node-1  # 替换为你的节点名
-131|      - my-node-1  # 替换为你的节点名
-132|      - my-node-1  # 替换为你的节点名
-133|      - my-node-1  # 替换为你的节点名
-134|      - my-node-1  # 替换为你的节点名
-135|      - DIRECT
-136|
-137|  # 自动选延迟最低
-138|  - name: "✅ 自动选择"
-139|    type: url-test
-140|    url: http://www.gstatic.com/generate_204
-141|    interval: 300
-142|    tolerance: 50
-143|    proxies:
-144|      - my-node-1  # 替换为你的节点名
-145|      - my-node-1  # 替换为你的节点名
-146|      - my-node-1  # 替换为你的节点名
-147|      - my-node-1  # 替换为你的节点名
-148|      - my-node-1  # 替换为你的节点名
-149|
-150|  # 负载均衡
-151|  - name: "⚖️ 负载均衡"
-152|    type: load-balance
-153|    strategy: consistent-hashing
-154|    url: "https://cp.cloudflare.com/generate_204"
-155|    interval: 300
-156|    proxies:
-157|      - my-node-1  # 替换为你的节点名
-158|      - my-node-1  # 替换为你的节点名
-159|      - my-node-1  # 替换为你的节点名
-160|      - my-node-1  # 替换为你的节点名
-161|      - my-node-1  # 替换为你的节点名
-162|
-163|  # 故障切换
-164|  - name: "⭕ 故障切换"
-165|    type: fallback
-166|    url: http://www.gstatic.com/generate_204
-167|    interval: 300
-168|    proxies:
-169|      - my-node-1  # 替换为你的节点名
-170|      - my-node-1  # 替换为你的节点名
-171|      - my-node-1  # 替换为你的节点名
-172|      - my-node-1  # 替换为你的节点名
-173|      - my-node-1  # 替换为你的节点名
-174|
-175|  # 直连
-176|  - name: "🎯 全球直连"
-177|    type: select
-178|    proxies:
-179|      - DIRECT
-180|      - "🚀 节点选择"
-181|      - "✅ 自动选择"
-182|
-183|  # 被墙
-184|  - name: "🧱 一堵高墙"
-185|    type: select
-186|    proxies:
-187|      - "🚀 节点选择"
-188|      - "✅ 自动选择"
-189|      - "🎯 全球直连"
-190|
-191|  # 苹果同步（iCloud 等，可选直连）
-192|  - name: "🍎 苹果同步"
-193|    type: select
-194|    proxies:
-195|      - "🎯 全球直连"
-196|      - "🚀 节点选择"
-197|      - "✅ 自动选择"
-198|
-199|  # 苹果服务（App Store 等）
-200|  - name: "🍎 苹果服务"
-201|    type: select
-202|    proxies:
-203|      - "🚀 节点选择"
-204|      - "✅ 自动选择"
-205|      - "🎯 全球直连"
-206|
-207|  # 境外服务
-208|  - name: "🌏 境外服务"
-209|    type: select
-210|    proxies:
-211|      - "🚀 节点选择"
-212|      - "✅ 自动选择"
-213|      - "🎯 全球直连"
-214|
-215|  # 谷歌
-216|  - name: "🧿 谷歌服务"
-217|    type: select
-218|    proxies:
-219|      - "🚀 节点选择"
-220|      - "✅ 自动选择"
-221|      - "🎯 全球直连"
-222|
-223|  # Telegram
-224|  - name: "📲 电报消息"
-225|    type: select
-226|    proxies:
-227|      - "🚀 节点选择"
-228|      - "✅ 自动选择"
-229|      - "🎯 全球直连"
-230|
-231|  # 内网
-232|  - name: "🏠 内网服务"
-233|    type: select
-234|    proxies:
-235|      - DIRECT
-236|      - "🎯 全球直连"
-237|
-238|  # 国内
-239|  - name: "🇨🇳 国内直连"
-240|    type: select
-241|    proxies:
-242|      - DIRECT
-243|      - "🎯 全球直连"
-244|      - "🚀 节点选择"
-245|
-246|  # 常用软件
-247|  - name: "📱 常用软件"
-248|    type: select
-249|    proxies:
-250|      - DIRECT
-251|      - "🎯 全球直连"
-252|      - "🚀 节点选择"
-253|
-254|  # 兜底
-255|  - name: "🐟 漏网之鱼"
-256|    type: select
-257|    proxies:
-258|      - "🚀 节点选择"
-259|      - "✅ 自动选择"
-260|      - "🎯 全球直连"
-261|
-262|# ============ 规则提供者 ============
-263|rule-providers:
-264|  icloud:
-265|    type: http
-266|    behavior: domain
-267|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
-268|    path: ./ruleset/icloud.yaml
-269|    interval: 86400
-270|
-271|  apple:
-272|    type: http
-273|    behavior: domain
-274|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
-275|    path: ./ruleset/apple.yaml
-276|    interval: 86400
-277|
-278|  google:
-279|    type: http
-280|    behavior: domain
-281|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
-282|    path: ./ruleset/google.yaml
-283|    interval: 86400
-284|
-285|  proxy:
-286|    type: http
-287|    behavior: domain
-288|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
-289|    path: ./ruleset/proxy.yaml
-290|    interval: 86400
-291|
-292|  direct:
-293|    type: http
-294|    behavior: domain
-295|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
-296|    path: ./ruleset/direct.yaml
-297|    interval: 86400
-298|
-299|  private:
-300|    type: http
-301|    behavior: domain
-302|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
-303|    path: ./ruleset/private.yaml
-304|    interval: 86400
-305|
-306|  gfw:
-307|    type: http
-308|    behavior: domain
-309|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
-310|    path: ./ruleset/gfw.yaml
-311|    interval: 86400
-312|
-313|  tld-not-cn:
-314|    type: http
-315|    behavior: domain
-316|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
-317|    path: ./ruleset/tld-not-cn.yaml
-318|    interval: 86400
-319|
-320|  telegramcidr:
-321|    type: http
-322|    behavior: ipcidr
-323|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
-324|    path: ./ruleset/telegramcidr.yaml
-325|    interval: 86400
-326|
-327|  cncidr:
-328|    type: http
-329|    behavior: ipcidr
-330|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
-331|    path: ./ruleset/cncidr.yaml
-332|    interval: 86400
-333|
-334|  lancidr:
-335|    type: http
-336|    behavior: ipcidr
-337|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
-338|    path: ./ruleset/lancidr.yaml
-339|    interval: 86400
-340|
-341|  applications:
-342|    type: http
-343|    behavior: classical
-344|    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
-345|    path: ./ruleset/applications.yaml
-346|    interval: 86400
-347|
-348|  # 自定义规则（从本仓库拉取）
-349|  my-proxy:
-350|    type: http
-351|    behavior: domain
-352|    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/proxy.txt"
-353|    path: ./ruleset/my-proxy.yaml
-354|    interval: 86400
-355|
-356|  my-direct:
-357|    type: http
-358|    behavior: domain
-359|    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/direct.txt"
-360|    path: ./ruleset/my-direct.yaml
-361|    interval: 86400
-362|
-363|  my-reject:
-364|    type: http
-365|    behavior: domain
-366|    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/reject.txt"
-367|    path: ./ruleset/my-reject.yaml
-368|    interval: 86400
-369|
-370|# ============ 规则 ============
-371|rules:
-372|  # ---- 内网 / 本地（最高优先级）----
-373|  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-374|  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-375|  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
-376|  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
-377|  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
-378|  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
-379|  - RULE-SET,private,🏠 内网服务
-380|  - RULE-SET,lancidr,🏠 内网服务
-381|
-382|  # ---- 广告拦截 ----
-383|  - RULE-SET,my-reject,REJECT
-384|
-385|  # ---- Telegram ----
-386|  - RULE-SET,telegramcidr,📲 电报消息
-387|
-388|  # ---- 谷歌 ----
-389|  - DOMAIN-SUFFIX,gstatic.com,🧿 谷歌服务
-390|  - RULE-SET,google,🧿 谷歌服务
-391|
-392|  # ---- 苹果 ----
-393|  - RULE-SET,icloud,🍎 苹果同步
-394|  - RULE-SET,apple,🍎 苹果服务
-395|
-396|  # ---- 常用软件 ----
-397|  - RULE-SET,applications,📱 常用软件
-398|
-399|  # ---- 被墙（GFW）----
-400|  - DOMAIN-SUFFIX,unmineable.com,🧱 一堵高墙
-401|  - RULE-SET,gfw,🧱 一堵高墙
-402|
-403|  # ---- 境外 ----
-404|  - RULE-SET,proxy,🌏 境外服务
-405|  - RULE-SET,tld-not-cn,🌏 境外服务
-406|
-407|  # ---- 自定义直连 ----
-408|  - DOMAIN-SUFFIX,jsdelivr.net,🇨🇳 国内直连
-409|  - DOMAIN-SUFFIX,douyin.com,🇨🇳 国内直连
-410|
-411|  # ---- 国内 ----
-412|  - RULE-SET,direct,🇨🇳 国内直连
-413|  - RULE-SET,my-direct,🇨🇳 国内直连
-414|  - RULE-SET,cncidr,🇨🇳 国内直连
-415|  - GEOIP,CN,🇨🇳 国内直连
-416|
-417|  # ---- 兜底 ----
-418|  - MATCH,🐟 漏网之鱼
-419|
+# ============================================================
+# My Clash Meta Config
+# 仓库: github.com/jindaye/my-clash-rules
+# ============================================================
+
+# ============ 基础 ============
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+ipv6: false
+find-process-mode: strict
+external-controller: :9090
+secret: "123456"
+
+# ============ DNS ============
+dns:
+  enable: true
+  prefer-h3: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    # 局域网
+    - "*.lan"
+    - "*.local"
+    - "*.router"
+    - "*.localdomain"
+    - "*.home.arpa"
+    - "*.belkin"
+    - "*.tplinklogin.net"
+    - "*.tenda"
+    - WORKGROUP
+    # Windows 网络检测
+    - "*.msftncsi.com"
+    - "*.msftconnecttest.com"
+    # 时间同步
+    - "time.windows.com"
+    - "time.nist.gov"
+    - "time.apple.com"
+    - "time.asia.apple.com"
+    - "time.*.com"
+    - "time.*.gov"
+    - "time.*.edu.cn"
+    - "*.ntp.org.cn"
+    - "*.openwrt.pool.ntp.org"
+    - "time1.cloud.tencent.com"
+    - "time.ustc.edu.cn"
+    - "pool.ntp.org"
+    - "ntp.ubuntu.com"
+    - "+.pool.ntp.org"
+    # STUN
+    - "stun.*.*"
+    - "stun.*.*.*"
+    - "+.stun.*.*"
+    - "+.stun.*.*.*"
+    - "+.stun.*.*.*.*"
+    - "+.stun.*.*.*.*.*"
+    # 游戏
+    - "*.n.n.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "xbox.*.*.microsoft.com"
+    - "*.*.xboxlive.com"
+    - "speedtest.cros.wr.pvp.net"
+    # QQ
+    - "localhost.ptlogin2.qq.com"
+
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - 114.114.114.114
+
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - 114.114.114.114
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+
+  fallback:
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
+    - tls://8.8.8.8:853
+
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+    domain:
+      - "+.google.com"
+      - "+.youtube.com"
+      - "+.facebook.com"
+      - "+.twitter.com"
+      - "+.telegram.org"
+      - "+.reddit.com"
+      - "+.spotify.com"
+      - "+.openai.com"
+      - "+.github.com"
+      - "+.cloudflare.com"
+
+# ============ 节点 ============
+# ⚠️ 节点信息放在 config.local.yaml，不要推到 Git
+proxies: []
+
+# ============ 代理组 ============
+proxy-groups:
+  # 主入口
+  - name: "🚀 节点选择"
+    type: select
+    proxies:
+      - "✅ 自动选择"
+      - "⚖️ 负载均衡"
+      - "⭕ 故障切换"
+      - DIRECT
+
+  # 自动选延迟最低
+  - name: "✅ 自动选择"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies: []
+
+  # 负载均衡
+  - name: "⚖️ 负载均衡"
+    type: load-balance
+    strategy: consistent-hashing
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+    proxies: []
+
+  # 故障切换
+  - name: "⭕ 故障切换"
+    type: fallback
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies: []
+
+  # 直连
+  - name: "🎯 全球直连"
+    type: select
+    proxies:
+      - DIRECT
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+
+  # 被墙
+  - name: "🧱 被墙网站"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+      - "🎯 全球直连"
+
+  # 苹果同步（iCloud 等，可选直连）
+  - name: "🍎 苹果同步"
+    type: select
+    proxies:
+      - "🎯 全球直连"
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+
+  # 苹果服务（App Store 等）
+  - name: "🍎 苹果服务"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+      - "🎯 全球直连"
+
+  # 谷歌
+  - name: "🧿 谷歌服务"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+      - "🎯 全球直连"
+
+  # Telegram
+  - name: "📲 电报消息"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+      - "🎯 全球直连"
+
+  # 内网
+  - name: "🏠 内网服务"
+    type: select
+    proxies:
+      - DIRECT
+      - "🎯 全球直连"
+
+  # 国内
+  - name: "🇨🇳 国内直连"
+    type: select
+    proxies:
+      - DIRECT
+      - "🎯 全球直连"
+      - "🚀 节点选择"
+
+  # 常用软件
+  - name: "📱 常用软件"
+    type: select
+    proxies:
+      - DIRECT
+      - "🎯 全球直连"
+      - "🚀 节点选择"
+
+  # 兜底
+  - name: "🐟 漏网之鱼"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "✅ 自动选择"
+      - "🎯 全球直连"
+
+# ============ 规则提供者 ============
+rule-providers:
+  # Loyalsoldier 上游规则
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  # 自定义规则（广告拦截）
+  my-reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/jindaye/my-clash-rules@main/rules/reject.txt"
+    path: ./ruleset/my-reject.yaml
+    interval: 86400
+
+# ============ 规则 ============
+rules:
+  # ---- 内网 / 本地（最高优先级）----
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  - RULE-SET,private,🏠 内网服务
+  - RULE-SET,lancidr,🏠 内网服务
+
+  # ---- 广告拦截 ----
+  - RULE-SET,my-reject,REJECT
+
+  # ---- Telegram ----
+  - RULE-SET,telegramcidr,📲 电报消息
+
+  # ---- 谷歌 ----
+  - DOMAIN-SUFFIX,gstatic.com,🧿 谷歌服务
+  - RULE-SET,google,🧿 谷歌服务
+
+  # ---- 苹果 ----
+  - RULE-SET,icloud,🍎 苹果同步
+  - RULE-SET,apple,🍎 苹果服务
+
+  # ---- 常用软件 ----
+  - RULE-SET,applications,📱 常用软件
+
+  # ---- 被墙 ----
+  - DOMAIN-SUFFIX,unmineable.com,🧱 被墙网站
+  - RULE-SET,gfw,🧱 被墙网站
+  - RULE-SET,proxy,🧱 被墙网站
+  - RULE-SET,tld-not-cn,🧱 被墙网站
+
+  # ---- 自定义直连 ----
+  - DOMAIN-SUFFIX,jsdelivr.net,🇨🇳 国内直连
+  - DOMAIN-SUFFIX,douyin.com,🇨🇳 国内直连
+
+  # ---- 国内 ----
+  - RULE-SET,direct,🇨🇳 国内直连
+  - RULE-SET,cncidr,🇨🇳 国内直连
+  - GEOIP,CN,🇨🇳 国内直连
+
+  # ---- 兜底 ----
+  - MATCH,🐟 漏网之鱼
